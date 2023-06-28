@@ -9,6 +9,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 from account import serializers
 from account.send_mail import send_confirmation_email
+from favorite.serializers import FavoriteUserSerializer
 
 # from account.sendmail import
 
@@ -43,6 +44,13 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         user.activation_code = ''
         user.save()
         return Response({'msg': 'User successfully activated!'}, status=200)
+
+    @action(['GET'], detail=True)
+    def favorites(self, request, pk):
+        product = self.get_object()
+        favorites = product.favorites.all()
+        serializer = FavoriteUserSerializer(instance=favorites, many=True)
+        return Response(serializer.data, status=200)
 
 
 class LoginView(TokenObtainPairView):
