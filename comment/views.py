@@ -1,4 +1,6 @@
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, permissions
+from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 
 from .models import Comment
@@ -14,6 +16,8 @@ class CommentViewSet(viewsets.ModelViewSet):
     queryset = Comment.objects.all()
     pagination_class = StandartResultPagination
     serializer_class = CommentSerializer
+    filter_backends = (DjangoFilterBackend, )
+    filterset_fields = ('product', 'user')
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)

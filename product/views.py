@@ -10,9 +10,11 @@ from rest_framework.filters import SearchFilter
 from comment.serializers import CommentSerializer
 from .models import Product
 from . import serializers
+from .serializers import ProductListSerializer
 
 
 class StandartResultPagination(PageNumberPagination):
+    # Пагинация на 2 страницы со списком продуктов
     page_size = 2
     page_query_param = 'page'
 
@@ -23,7 +25,6 @@ class ProductViewSet(ModelViewSet):
     filter_backends = (DjangoFilterBackend, SearchFilter)
     search_fields = ('title', 'description')
     filterset_fields = ('category', 'price')
-
 
     def get_serializer_class(self):
         if self.action == 'list':
@@ -38,15 +39,18 @@ class ProductViewSet(ModelViewSet):
             return [permissions.IsAdminUser(), ]
         return [permissions.AllowAny(), ]
 
-    @action(['GET'], detail=True)
-    def comments(self, request, pk):
-        product = self.get_object()
-        comments = product.comments.all()
-        paginator = Paginator(comments, 2)
-        page_number = request.GET.get('page')
-        page_obj = paginator.get_page(page_number)
-        serializer = CommentSerializer(instance=page_obj, many=True)
-        return Response(serializer.data, status=200)
+
+    # @action(['GET'], detail=True)
+    # def comments(self, request, pk):
+    #     product = self.get_object()
+    #     comments = product.comments.all()
+    #     paginator = Paginator(comments, 2)
+    #     page_number = request.GET.get('page')
+    #     page_obj = paginator.get_page(page_number)
+    #     serializer = CommentSerializer(instance=page_obj, many=True)
+    #     return Response(serializer.data, status=200)
+
+
     #
     # # ...api/v1/posts/<id>/likes
     # @action(['GET'], detail=True)
