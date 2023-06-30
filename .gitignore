@@ -5,6 +5,7 @@
 pycache
 db.sqlite3
 media
+shopping_cache
 
 # Backup files #
 *.bak
