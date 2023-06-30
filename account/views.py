@@ -1,5 +1,6 @@
 from django.contrib.auth import get_user_model
 from django.urls import path
+from django.views.decorators.cache import cache_page
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import GenericViewSet
@@ -50,6 +51,7 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         user.save()
         return Response({'msg': 'User successfully activated!'}, status=200)
 
+    @cache_page(60 * 15)
     @action(['GET'], detail=True)
     def favorites(self, request, pk):
         product = self.get_object()

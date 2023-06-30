@@ -1,4 +1,6 @@
+from django.core.cache import cache
 from django.core.paginator import Paginator
+from django.views.decorators.cache import cache_page
 from rest_framework import permissions
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -27,6 +29,8 @@ class ProductViewSet(ModelViewSet):
     search_fields = ('title', 'description')
     filterset_fields = ('category', 'price')
 
+
+    # @cache_page(60 * 15)
     def get_serializer_class(self):
         if self.action == 'list':
             return serializers.ProductListSerializer
@@ -40,6 +44,7 @@ class ProductViewSet(ModelViewSet):
             return [permissions.IsAdminUser(), ]
         return [permissions.AllowAny(), ]
 
+    @cache_page(60 * 15)
     @action(['GET'], detail=True)
     def likes(self, request, pk):
         product = self.get_object()
