@@ -3,6 +3,7 @@ from rest_framework import viewsets, permissions
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
 
+from config.tasks import send_comment_notification_email
 from .models import Comment
 from .serializers import CommentSerializer
 
@@ -21,6 +22,7 @@ class CommentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
+        send_comment_notification_email.delay(serializer.data['id'])
 
     def get_permissions(self):
         if self.action in ('update', 'partial_update', 'destroy'):

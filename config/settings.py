@@ -13,11 +13,13 @@ import logging
 import os
 from datetime import timedelta
 from pathlib import Path
+from pythonjsonlogger.jsonlogger import JsonFormatter
 
 
 from decouple import config
 from django.core.cache.backends import memcached
 
+from logging_formatters import CustomJsonFormatter
 from .logging_config import logger
 
 
@@ -215,23 +217,60 @@ SIMPLE_JWT = {
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'formatters': {
+#         'main_format': {
+#             "format": "{asctime} - {levelname} - {module} - {filename} - {message}",
+#             "style": "{",
+#
+#         },
+#         'json_formatter': {
+#             '()': CustomJsonFormatter,
+#         }
+#     },
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'main_format',
+#         },
+#         'file': {
+#             "class": "logging.FileHandler",
+#             "formatter": "json_formatter",
+#             "filename": "logfile.log",
+#         },
+#     },
+#
+#     'loggers': {
+#         'main': {
+#             'handlers': ['console', 'file'],
+#             'level': 'DEBUG',
+#             'propagate': True,
+#         },
+#     },
+# }
+
 LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': os.path.join(BASE_DIR, 'logs', 'logfile.log'),
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "file": {
+            "level": "DEBUG",
+            "class": "logging.FileHandler",
+            "filename": "logfile.log",
         },
     },
-    'loggers': {
-        'root': {
-            'handlers': ['file'],
-            'level': 'DEBUG',
+    "loggers": {
+        "django": {
+            "handlers": ["file"],
+            "level": "DEBUG",
+            "propagate": True,
         },
     },
 }
+
 
 CACHES = {
     'default': {
@@ -243,3 +282,26 @@ CACHES = {
 CACHE_MIDDLEWARE_ALIAS = 'default'
 CACHE_MIDDLEWARE_SECONDS = 3600
 CACHE_MIDDLEWARE_KEY_PREFIX = ''
+
+# Настройки для Celery
+# CELERY_BROKER_URL = 'redis://localhost:6379'  # URL брокера сообщений (например, Redis)
+# CELERY_RESULT_BACKEND = 'redis://localhost:6379'  # URL бекенда результатов (например, Redis)
+# CELERY_ACCEPT_CONTENT = ['application/json']
+# CELERY_TASK_SERIALIZER = 'json'
+# CELERY_RESULT_SERIALIZER = 'json'
+# CELERY_TIMEZONE = 'Asia/Bishkek'
+
+REDIS_HOST = '127.0.0.1'
+REDIS_PORT = '6379'
+
+CELERY_BROKER_URL = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+CELERY_BROKER_TRANSPORT_OPTIONS = {'visibility_timeout': 3600}
+CELERY_RESULT_BACKEND = 'redis://' + REDIS_HOST + ':' + REDIS_PORT + '/0'
+#                           redis://127.0.0.1:6379/0
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+
+# redis-cli - команда для запуска Radis
+# redis-server
+# celery - A config worker - l INFO - запуск Celery

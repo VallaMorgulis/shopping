@@ -4,6 +4,9 @@ from django.contrib.auth.models import User
 from rest_framework import serializers
 
 from account.models import CustomUser
+# import logging
+#
+# logger = logging.getLogger('main')
 
 User = get_user_model()
 
