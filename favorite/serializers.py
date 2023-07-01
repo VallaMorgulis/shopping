@@ -19,13 +19,13 @@ class FavoriteUserSerializer(serializers.ModelSerializer):
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.id')
+    # user = serializers.ReadOnlyField(source='user.id')
     user_name = serializers.ReadOnlyField(source='user.get_full_name')
     product_name = serializers.ReadOnlyField(source='product.title')
 
     class Meta:
         model = Favorite
-        fields = '__all__'
+        exclude = ('user', )
 
     def to_representation(self, instance):
         repr = super(FavoriteSerializer, self).to_representation(instance)
