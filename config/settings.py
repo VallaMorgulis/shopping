@@ -66,7 +66,7 @@ INSTALLED_APPS = [
     # 'rating',
     'comment',
     'like',
-    # 'favorite',
+    'favorite',
 
 
 ]

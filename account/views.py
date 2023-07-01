@@ -11,6 +11,8 @@ from rest_framework.response import Response
 
 from rest_framework import status
 from django.contrib.auth.models import User
+
+from favorite.serializers import FavoriteUserSerializer
 from .serializers import ChangePasswordSerializer
 from rest_framework.permissions import IsAuthenticated
 
@@ -53,12 +55,12 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         return Response({'msg': 'User successfully activated!'}, status=200)
 
     # @cache_page(60 * 15)
-    # @action(['GET'], detail=True)
-    # def favorites(self, request, pk):
-    #     product = self.get_object()
-    #     favorites = product.favorites.all()
-    #     serializer = FavoriteUserSerializer(instance=favorites, many=True)
-    #     return Response(serializer.data, status=200)
+    @action(['GET'], detail=True)
+    def favorites(self, request, pk):
+        product = self.get_object()
+        favorites = product.favorites.all()
+        serializer = FavoriteUserSerializer(instance=favorites, many=True)
+        return Response(serializer.data, status=200)
 
 
 class LoginView(TokenObtainPairView):
