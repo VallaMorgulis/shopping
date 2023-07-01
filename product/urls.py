@@ -9,6 +9,4 @@ router.register('', views.ProductViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    # path('', views.ProductListCreateView.as_view()),
-    # path('<int:pk>/', views.ProductDetailView.as_view()),
 ]

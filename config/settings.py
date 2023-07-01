@@ -61,12 +61,12 @@ INSTALLED_APPS = [
     # myApps
     'account',
     'category',
-    'order',
+    # 'order',
     'product',
-    'rating',
-    'comment',
-    'like',
-    'favorite',
+    # 'rating',
+    # 'comment',
+    # 'like',
+    # 'favorite',
 
 
 ]
@@ -219,69 +219,35 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
 # LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'formatters': {
-#         'main_format': {
-#             "format": "{asctime} - {levelname} - {module} - {filename} - {message}",
-#             "style": "{",
-#
-#         },
-#         'json_formatter': {
-#             '()': CustomJsonFormatter,
-#         }
-#     },
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#             'formatter': 'main_format',
-#         },
-#         'file': {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "level": "DEBUG",
 #             "class": "logging.FileHandler",
-#             "formatter": "json_formatter",
 #             "filename": "logfile.log",
 #         },
 #     },
-#
-#     'loggers': {
-#         'main': {
-#             'handlers': ['console', 'file'],
-#             'level': 'DEBUG',
-#             'propagate': True,
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file"],
+#             "level": "DEBUG",
+#             "propagate": True,
 #         },
 #     },
 # }
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "logfile.log",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["file"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-    },
-}
 
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'shopping_cache'),
-    }
-}
-
-CACHE_MIDDLEWARE_ALIAS = 'default'
-CACHE_MIDDLEWARE_SECONDS = 3600
-CACHE_MIDDLEWARE_KEY_PREFIX = ''
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': os.path.join(BASE_DIR, 'shopping_cache'),
+#     }
+# }
+#
+# CACHE_MIDDLEWARE_ALIAS = 'default'
+# CACHE_MIDDLEWARE_SECONDS = 3600
+# CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Настройки для Celery
 # CELERY_BROKER_URL = 'redis://localhost:6379'  # URL брокера сообщений (например, Redis)

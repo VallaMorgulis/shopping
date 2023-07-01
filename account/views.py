@@ -16,7 +16,7 @@ from rest_framework.permissions import IsAuthenticated
 
 from account import serializers
 from account.send_mail import send_confirmation_email
-from favorite.serializers import FavoriteUserSerializer
+# from favorite.serializers import FavoriteUserSerializer
 
 User = get_user_model()
 
@@ -52,13 +52,13 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         user.save()
         return Response({'msg': 'User successfully activated!'}, status=200)
 
-    @cache_page(60 * 15)
-    @action(['GET'], detail=True)
-    def favorites(self, request, pk):
-        product = self.get_object()
-        favorites = product.favorites.all()
-        serializer = FavoriteUserSerializer(instance=favorites, many=True)
-        return Response(serializer.data, status=200)
+    # @cache_page(60 * 15)
+    # @action(['GET'], detail=True)
+    # def favorites(self, request, pk):
+    #     product = self.get_object()
+    #     favorites = product.favorites.all()
+    #     serializer = FavoriteUserSerializer(instance=favorites, many=True)
+    #     return Response(serializer.data, status=200)
 
 
 class LoginView(TokenObtainPairView):

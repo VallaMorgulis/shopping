@@ -1,13 +1,36 @@
-from rest_framework import serializers
-from .models import Rating
-
-
-class RatingSerializer(serializers.ModelSerializer):
-    user_full_name = serializers.SerializerMethodField()
-
-    class Meta:
-        model = Rating
-        fields = ['id', 'product', 'rating', 'user', 'user_full_name', 'created_at']
-
-    def get_user_full_name(self, obj):
-        return f"{obj.user.first_name} {obj.user.last_name}"
+# from rest_framework import serializers
+# from rating.models import Review
+#
+#
+# class ReviewActionSerializer(serializers.ModelSerializer):
+#     user = serializers.ReadOnlyField(source='user.email')
+#     product = serializers.ReadOnlyField(source='product.title')
+#
+#     class Meta:
+#         model = Review
+#         fields = '__all__'
+#
+#
+# class ReviewSerializer(serializers.ModelSerializer):
+#     user = serializers.ReadOnlyField(source='user.email')
+#
+#     class Meta:
+#         model = Review
+#         fields = '__all__'  # rating text
+#
+#     def validate(self, attrs):
+#         request = self.context['request']
+#         product = attrs['product']
+#         user = request.user
+#         if user.reviews.filter(product=product).exists():
+#             raise serializers.ValidationError('You already reviewed this product!')
+#         return attrs
+#
+#
+# class ReviewUpdateSerializer(serializers.ModelSerializer):
+#     user = serializers.ReadOnlyField(source='user.email')
+#     product = serializers.ReadOnlyField(source='product.title')
+#
+#     class Meta:
+#         model = Review
+#         fields = '__all__'
