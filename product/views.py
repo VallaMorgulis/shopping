@@ -1,10 +1,12 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from rest_framework import permissions, response
 from rest_framework.decorators import action
 
+from like.serializers import LikeUserSerializer
 # from rating.serializers import ReviewActionSerializer
 from .models import Product
 from . import serializers
@@ -69,9 +71,14 @@ class ProductViewSet(ModelViewSet):
     #
 
     # @cache_page(60 * 15)
-    # @action(['GET'], detail=True)
-    # def likes(self, request, pk):
-    #     product = self.get_object()
-    #     likes = product.likes.all()
-    #     serializer = LikeUserSerializer(instance=likes, many=True)
-    #     return Response(serializer.data, status=200)
+    @action(['GET'], detail=True)
+    def likes(self, request, pk):
+        product = self.get_object()
+        likes = product.likes.all()
+        serializer = LikeUserSerializer(instance=likes, many=True)
+        total_likes = likes.count()  # Получить общее количество лайков
+        response_data = {
+            'likes': serializer.data,
+            'total_likes': total_likes
+        }
+        return Response(response_data, status=200)
