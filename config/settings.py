@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     # 'order',
     'product',
     # 'rating',
-    # 'comment',
+    'comment',
     # 'like',
     # 'favorite',
 
@@ -270,4 +270,4 @@ CELERY_RESULT_SERIALIZER = 'json'
 
 # redis-cli - команда для запуска Radis
 # redis-server
-# celery - A config worker - l INFO - запуск Celery
+# celery -A config worker -l INFO - запуск Celery
