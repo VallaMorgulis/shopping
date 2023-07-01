@@ -7,6 +7,7 @@ from rest_framework import permissions, response
 from rest_framework.decorators import action
 
 from like.serializers import LikeUserSerializer
+from rating.serializers import ReviewSerializer, ReviewActionSerializer
 # from rating.serializers import ReviewActionSerializer
 from .models import Product
 from . import serializers
@@ -48,27 +49,33 @@ class ProductViewSet(ModelViewSet):
     #         serializer = ReviewActionSerializer(reviews, many=True).data
     #         return response.Response(serializer, status=200)
     #     else:
-    #         if product.reviews.filter(owner=request.user).exists():
+    #         if product.reviews.filter(user=request.user).exists():
     #             return response.Response('You already reviewed this product!',
     #                                      status=400)
     #         data = request.data  # rating text
     #         serializer = ReviewActionSerializer(data=data)
     #         serializer.is_valid(raise_exception=True)
-    #         serializer.save(owner=request.user, product=product)
+    #         serializer.save(user=request.user, product=product)
     #         return response.Response(serializer.data, status=201)
 
-    # api/v1/product/id/
+    # api/v1/product/id/review_delete/
     # @action(['DELETE'], detail=True)
     # def review_delete(self, request, pk):
     #     product = self.get_object()  # Product.objects.get(id=pk)
     #     user = request.user
-    #     if not product.reviews.filter(owner=user).exists():
+    #     if not product.reviews.filter(user=user).exists():
     #         return response.Response('You didn\'t reviewed this product!',
     #                                  status=400)
-    #     review = product.reviews.get(owner=user)
+    #     review = product.reviews.get(user=user)
     #     review.delete()
     #     return response.Response('Successfully deleted', status=204)
-    #
+
+    # @action(['GET'], detail=True)
+    # def reviews(self, request, pk):
+    #     product = self.get_object()
+    #     reviews = product.reviews.all()
+    #     serializer = ReviewSerializer(reviews, many=True)
+    #     return Response(serializer.data, status=200)
 
     # @cache_page(60 * 15)
     @action(['GET'], detail=True)

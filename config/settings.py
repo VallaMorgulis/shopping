@@ -63,7 +63,7 @@ INSTALLED_APPS = [
     'category',
     # 'order',
     'product',
-    # 'rating',
+    'rating',
     'comment',
     'like',
     'favorite',
