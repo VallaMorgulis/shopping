@@ -13,13 +13,13 @@ import logging
 import os
 from datetime import timedelta
 from pathlib import Path
-from pythonjsonlogger.jsonlogger import JsonFormatter
+# from pythonjsonlogger.jsonlogger import JsonFormatter
 
 
 from decouple import config
 from django.core.cache.backends import memcached
 
-from logging_formatters import CustomJsonFormatter
+# from logging_formatters import CustomJsonFormatter
 from .logging_config import logger
 
 
@@ -218,36 +218,36 @@ SIMPLE_JWT = {
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "file": {
-            "level": "DEBUG",
-            "class": "logging.FileHandler",
-            "filename": "logfile.log",
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["file"],
-            "level": "DEBUG",
-            "propagate": True,
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "handlers": {
+#         "file": {
+#             "level": "DEBUG",
+#             "class": "logging.FileHandler",
+#             "filename": "logfile.log",
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["file"],
+#             "level": "DEBUG",
+#             "propagate": True,
+#         },
+#     },
+# }
 
 
-CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
-        'LOCATION': os.path.join(BASE_DIR, 'shopping_cache'),
-    }
-}
-
-CACHE_MIDDLEWARE_ALIAS = 'default'
-CACHE_MIDDLEWARE_SECONDS = 2
-CACHE_MIDDLEWARE_KEY_PREFIX = ''
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+#         'LOCATION': os.path.join(BASE_DIR, 'shopping_cache'),
+#     }
+# }
+#
+# CACHE_MIDDLEWARE_ALIAS = 'default'
+# CACHE_MIDDLEWARE_SECONDS = 2
+# CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Настройки для Celery
 # CELERY_BROKER_URL = 'redis://localhost:6379'  # URL брокера сообщений (например, Redis)

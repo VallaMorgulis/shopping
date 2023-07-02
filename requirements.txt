@@ -49,3 +49,4 @@ django-rest-passwordreset
 redis
 celery[redis]
 python-json-logger
+decouple
