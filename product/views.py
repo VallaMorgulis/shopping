@@ -41,22 +41,22 @@ class ProductViewSet(ModelViewSet):
         return [permissions.IsAuthenticatedOrReadOnly(), ]
 
     # api/v1/products/<id>/reviews/
-    # @action(['GET', 'POST'], detail=True)
-    # def reviews(self, request, pk):
-    #     product = self.get_object()
-    #     if request.method == 'GET':
-    #         reviews = product.reviews.all()
-    #         serializer = ReviewActionSerializer(reviews, many=True).data
-    #         return response.Response(serializer, status=200)
-    #     else:
-    #         if product.reviews.filter(user=request.user).exists():
-    #             return response.Response('You already reviewed this product!',
-    #                                      status=400)
-    #         data = request.data  # rating text
-    #         serializer = ReviewActionSerializer(data=data)
-    #         serializer.is_valid(raise_exception=True)
-    #         serializer.save(user=request.user, product=product)
-    #         return response.Response(serializer.data, status=201)
+    @action(['GET', 'POST'], detail=True)
+    def reviews(self, request, pk):
+        product = self.get_object()
+        if request.method == 'GET':
+            reviews = product.reviews.all()
+            serializer = ReviewActionSerializer(reviews, many=True).data
+            return response.Response(serializer, status=200)
+        else:
+            if product.reviews.filter(user=request.user).exists():
+                return response.Response('You already reviewed this product!',
+                                         status=400)
+            data = request.data  # rating text
+            serializer = ReviewActionSerializer(data=data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save(user=request.user, product=product)
+            return response.Response(serializer.data, status=201)
 
     # api/v1/product/id/review_delete/
     # @action(['DELETE'], detail=True)
