@@ -1,83 +1,53 @@
+from django.db.models import Avg
 from rest_framework import serializers
-
 from category.models import Category
-from .models import Product, ProductImage
+from rating.serializers import ReviewSerializer
+# from rating.serializers import ReviewSerializer
+from .models import Product
 
 
 class ProductListSerializer(serializers.ModelSerializer):
-    category_name = serializers.ReadOnlyField(source='category.name')
-    description = serializers.SerializerMethodField()
-
-    def get_description(self, obj):
-        if len(obj.description) > 30:
-            return obj.description[:30] + '...'
-        return obj.description
+    user_email = serializers.ReadOnlyField(source='user.email')
 
     class Meta:
         model = Product
-        fields = ('id', 'title', 'category', 'category_name', 'preview', 'price',
-                  'description')
+        fields = ('user', 'user_email', 'title', 'price', 'image', 'stock', 'id')
 
-    # def to_representation(self, instance):
-    #     repr = super(ProductListSerializer, self).to_representation(instance)
-    #     repr['likes_count'] = instance.likes.count()
-    #     user = self.context['request'].user
-    #     if user.is_authenticated:
-    #         repr['is_liked'] = user.likes.filter(post=instance).exists()
-    #         repr['is_favorite'] = user.favorites.filter(post=instance).exists()
-    #     return repr
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr['rating'] = instance.reviews.aggregate(Avg('rating'))['rating__avg']
+        return repr
 
 
-class ProductImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = ProductImage
-        fields = '__all__'
-
-
-class ProductCreateSerializer(serializers.ModelSerializer):
-    category = serializers.PrimaryKeyRelatedField(required=True,
-                                                  queryset=Category.objects.all())
-    images = ProductImageSerializer(many=True, required=False)
+class ProductSerializer(serializers.ModelSerializer):
+    # user_email = serializers.ReadOnlyField(source='user.email')
+    # user = serializers.ReadOnlyField(source='user.id')
+    reviews = ReviewSerializer(many=True)
 
     class Meta:
         model = Product
         fields = '__all__'
 
-    def create(self, validated_data):
-        request = self.context.get('request')
-        images = request.FILES.getlist('images')
-        product = Product.objects.create(**validated_data)
+    @staticmethod
+    def get_stars(instance):
+        stars = {
+            '5': instance.reviews.filter(rating=5).count(), '4': instance.reviews.filter(rating=4).count(),
+            '3': instance.reviews.filter(rating=3).count(), '2': instance.reviews.filter(rating=2).count(),
+            '1': instance.reviews.filter(rating=1).count()}
+        return stars
 
-        for image in images:
-            ProductImage.objects.create(image=image, product=product)
-        return product
+    def to_representation(self, instance):
+        repr = super().to_representation(instance)
+        repr['rating'] = instance.reviews.aggregate(Avg('rating'))
+        rating = repr['rating']
+        rating['ratings_count'] = instance.reviews.count()
+        repr['stars'] = self.get_stars(instance)
+        return repr
 
 
-class ProductDetailSerializer(serializers.ModelSerializer):
-    category_name = serializers.ReadOnlyField(source='category.name')
-    images = ProductImageSerializer(many=True)
 
-    class Meta:
-        model = Product
-        fields = '__all__'
 
-    # def to_representation(self, instance):
-    #     repr = super().to_representation(instance)
-    #     repr['comments_count'] = instance.comments.count()
-    #     repr['comment'] = CommentSerializer(
-    #         instance.comments.all(), many=True).data  # 2 способ
-    #     repr['likes_count'] = instance.likes.count()
-    #     user = self.context['request'].user
-    #     if user.is_authenticated:
-    #         repr['is_liked'] = user.likes.filter(post=instance).exists()
-    #         repr['is_favorite'] = user.favorites.filter(post=instance).exists()
-    #     return repr
 
-# class ProductListLikesSerializer(serializers.ModelSerializer):
-#     owner_username = serializers.ReadOnlyField(source='owner.username')
-#     category_name = serializers.ReadOnlyField(source='category.name')
-#
-#     class Meta:
-#         model = Product
-#         fields = ('id', 'owner', 'title', 'owner_username', 'category_name',
-#                   'category', 'preview')
+
+
+

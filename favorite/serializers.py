@@ -13,24 +13,24 @@ class FavoriteUserSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         repr = super(FavoriteUserSerializer, self).to_representation(instance)
         repr['product_title'] = instance.product.title
-        preview = instance.product.preview
+        preview = instance.product.image
         repr['product_preview'] = preview.url if preview else None
         return repr
 
 
 class FavoriteSerializer(serializers.ModelSerializer):
-    user = serializers.ReadOnlyField(source='user.id')
+    # user = serializers.ReadOnlyField(source='user.id')
     user_name = serializers.ReadOnlyField(source='user.get_full_name')
     product_name = serializers.ReadOnlyField(source='product.title')
 
     class Meta:
         model = Favorite
-        fields = '__all__'
+        exclude = ('user', )
 
     def to_representation(self, instance):
         repr = super(FavoriteSerializer, self).to_representation(instance)
         # repr['product_title'] = instance.product.title
-        preview = instance.product.preview
+        preview = instance.product.image
         repr['product_preview'] = preview.url if preview else None
         return repr
 

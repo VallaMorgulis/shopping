@@ -1,37 +1,29 @@
-from random import randint
-
+from django.contrib.auth import get_user_model
 from django.db import models
-
-from account.models import CustomUser
 from category.models import Category
+from ckeditor.fields import RichTextField
+
+User = get_user_model()
 
 
 class Product(models.Model):
-    title = models.CharField(max_length=100)
-    description = models.TextField(blank=True)
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    amount = models.IntegerField()
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL,
-                                 related_name='products', null=True)
-    preview = models.ImageField(upload_to='images/', null=True)
+    STATUS_CHOICES = (
+        ('in_stock', 'В наличии'),
+        ('out_of_stock', 'Нет в наличии')
+    )
+
+    user = models.ForeignKey(User, on_delete=models.RESTRICT,
+                              related_name='products')
+    title = models.CharField(max_length=150)
+    description = RichTextField()
+    category = models.ForeignKey(Category, related_name='products',
+                                 on_delete=models.RESTRICT)
+    image = models.ImageField(upload_to='images')
+    price = models.DecimalField(max_digits=12, decimal_places=2)
+    stock = models.CharField(choices=STATUS_CHOICES, max_length=50)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f'{self.category} - {self.title[:25]}'
-
-    class Meta:
-        ordering = ('created_at',)
+        return self.title
 
 
-class ProductImage(models.Model):
-    title = models.CharField(max_length=100, blank=True)
-    image = models.ImageField(upload_to='images/')
-    product = models.ForeignKey(Product, related_name='images', on_delete=models.CASCADE)
-
-    def generate_name(self):
-        return 'image' + str(randint(100000, 999999))
-
-    def save(self, *args, **kwargs):
-        self.title = self.generate_name()
-        return super(ProductImage, self).save(*args, **kwargs)

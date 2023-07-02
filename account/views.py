@@ -11,13 +11,14 @@ from rest_framework.response import Response
 
 from rest_framework import status
 from django.contrib.auth.models import User
+
+from favorite.serializers import FavoriteUserSerializer
 from .serializers import ChangePasswordSerializer
 from rest_framework.permissions import IsAuthenticated
 
 from account import serializers
 from account.send_mail import send_confirmation_email
-from favorite.serializers import FavoriteUserSerializer
-
+# from favorite.serializers import FavoriteUserSerializer
 
 User = get_user_model()
 
@@ -26,6 +27,8 @@ class UserViewSet(ListModelMixin, GenericViewSet):
     queryset = User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = (AllowAny,)
+
+
 
     @action(['POST'], detail=False)
     def register(self, request, *args, **kwargs):
@@ -51,7 +54,7 @@ class UserViewSet(ListModelMixin, GenericViewSet):
         user.save()
         return Response({'msg': 'User successfully activated!'}, status=200)
 
-    @cache_page(60 * 15)
+    # @cache_page(60 * 15)
     @action(['GET'], detail=True)
     def favorites(self, request, pk):
         product = self.get_object()

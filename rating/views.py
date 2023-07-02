@@ -1,13 +1,13 @@
-from rest_framework import viewsets, permissions
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import permissions
+from rest_framework.viewsets import ModelViewSet
 
-from .models import Rating
-from .serializers import RatingSerializer
+from .models import Review
+from .serializers import ReviewSerializer
 
 
-class RatingViewSet(viewsets.ModelViewSet):
-    queryset = Rating.objects.all()
-    serializer_class = RatingSerializer
+class RatingViewSet(ModelViewSet):
+    queryset = Review.objects.all()
+    serializer_class = ReviewSerializer
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
@@ -16,3 +16,7 @@ class RatingViewSet(viewsets.ModelViewSet):
         if self.action in ('update', 'partial_update', 'destroy'):
             return [permissions.IsAdminUser(), ]
         return [permissions.IsAuthenticatedOrReadOnly(), ]
+
+
+
+

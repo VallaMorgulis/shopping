@@ -1,19 +1,16 @@
+from django_filters import OrderingFilter
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework import viewsets, permissions
-from .models import Order
-from .serializers import OrderSerializer
+from rest_framework.generics import ListCreateAPIView
+from rest_framework.response import Response
+from order.serializers import OrderSerializer
 
 
-class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
+class CreateOrderView(ListCreateAPIView):
     serializer_class = OrderSerializer
-    filter_backends = (DjangoFilterBackend,)  # история заказов
-    filterset_fields = ('user',)
 
-    def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+    def get(self, request, *args, **kwargs):
+        user = request.user
+        orders = user.orders.all()
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data, status=200)
 
-    def get_permissions(self):
-        if self.action in ('update', 'partial_update', 'destroy'):
-            return [permissions.IsAdminUser(), ]
-        return [permissions.IsAuthenticatedOrReadOnly(), ]

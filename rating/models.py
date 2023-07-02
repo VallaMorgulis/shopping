@@ -1,12 +1,23 @@
-from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
-
-from account.models import CustomUser
 from product.models import Product
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
-class Rating(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='ratings')
-    rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
+class Mark:
+    marks = ((1, 'Too bad!'), (2, 'Bad!'), (3, 'Normal!'), (4, 'Good!'),
+             (5, 'Excellent!'))
+
+
+class Review(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,
+                                related_name='reviews')
+    user = models.ForeignKey(User, on_delete=models.CASCADE,
+                             related_name='reviews')
+    rating = models.PositiveSmallIntegerField(choices=Mark.marks)
+    text = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['user', 'product']
