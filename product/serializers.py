@@ -22,7 +22,7 @@ class ProductListSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     # user_email = serializers.ReadOnlyField(source='user.email')
     # user = serializers.ReadOnlyField(source='user.id')
-    reviews = ReviewSerializer(many=True)
+    # reviews = ReviewSerializer(many=True)
 
     class Meta:
         model = Product
