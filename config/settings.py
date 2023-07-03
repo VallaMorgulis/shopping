@@ -17,7 +17,7 @@ from pathlib import Path
 
 
 from decouple import config
-from django.core.cache.backends import memcached
+# from django.core.cache.backends import memcached
 
 # from logging_formatters import CustomJsonFormatter
 from .logging_config import logger

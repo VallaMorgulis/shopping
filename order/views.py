@@ -11,6 +11,7 @@ class CreateOrderView(ListCreateAPIView):
     def get(self, request, *args, **kwargs):
         user = request.user
         orders = user.orders.all()
+        # orders = user.orders.filter(user=user).order_by('-id')
         serializer = OrderSerializer(orders, many=True)
         return Response(serializer.data, status=200)
 
