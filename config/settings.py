@@ -15,7 +15,6 @@ from datetime import timedelta
 from pathlib import Path
 # from pythonjsonlogger.jsonlogger import JsonFormatter
 
-
 from decouple import config
 # from django.core.cache.backends import memcached
 

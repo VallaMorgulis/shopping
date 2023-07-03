@@ -50,3 +50,4 @@ redis
 celery[redis]
 python-json-logger
 decouple
+beautifulsoup4
