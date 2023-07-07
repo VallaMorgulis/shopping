@@ -249,13 +249,6 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # CACHE_MIDDLEWARE_KEY_PREFIX = ''
 
 # Настройки для Celery
-# CELERY_BROKER_URL = 'redis://localhost:6379'  # URL брокера сообщений (например, Redis)
-# CELERY_RESULT_BACKEND = 'redis://localhost:6379'  # URL бекенда результатов (например, Redis)
-# CELERY_ACCEPT_CONTENT = ['application/json']
-# CELERY_TASK_SERIALIZER = 'json'
-# CELERY_RESULT_SERIALIZER = 'json'
-# CELERY_TIMEZONE = 'Asia/Bishkek'
-
 REDIS_HOST = '127.0.0.1'
 REDIS_PORT = '6379'
 
